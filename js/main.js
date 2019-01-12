@@ -1,8 +1,19 @@
+if ('serviceWorker' in navigator) {
+	window.addEventListener('load', function() {
+  navigator.serviceWorker.register("/sw.js")
+    .then(function(reg){
+      console.log('serviceWorker registration successful with scope: ' + reg.scope);
+    }).catch(function(error){
+    console.log('serviceWorker registration failed: ' + error);
+  });
+})
+}
+
 let restaurants,
   neighborhoods,
-  cuisines
-var newMap
-var markers = []
+  cuisines;
+var newMap;
+var markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -78,7 +89,7 @@ initMap = () => {
         scrollWheelZoom: false
       });
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-    mapboxToken: '<your MAPBOX API KEY HERE>',
+    mapboxToken: 'pk.eyJ1IjoiemFpbmFiZWxzYXllZCIsImEiOiJjam80cDJ2YzYxNmkzM3ZyanNoczc2N3B3In0.qAtvzb-0__vuQRj7RnRsug',
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
       '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -161,23 +172,30 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt='Photo extract from'+restaurant.name+'Restaurant';
+  image.tabIndex='0';
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
+  name.tabIndex='0';
   li.append(name);
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
+  neighborhood.tabIndex='0';
   li.append(neighborhood);
 
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
+  address.tabIndex='0';
   li.append(address);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
+  more.tabIndex='0';
+  more.setAttribute('aria-label','View Details for'+restaurant.name+'Restaurant');
   li.append(more)
 
   return li
@@ -208,4 +226,3 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 } */
-
